@@ -4,62 +4,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author yunkuangao a317526763@gmail.com
+ * @apiNote String tools
+ **/
 public class StringHelper {
     /**
-     * @param str
-     * @return boolean
+     * @param object default type String, check object is empty and length equals 0
+     * @return boolean true: object is null or ""; false: object have any string
      * @author yunkuangao a317526763@gmail.com
-     * @apiNote 判断当前对象是否为空或者空字符串
-     * @date 2021/5/26 11:22
+     * @apiNote check param is null or length == 0
      **/
-    public static boolean isEmpty(Object str) {
-        return str == null || ((String) str).length() == 0;
+    public static boolean isEmptyString(Object object) {
+        return object == null || ((String) object).length() == 0;
     }
 
     /**
-     * @param str
-     * @return boolean
+     * @param object default type String, check object have any string
+     * @return boolean true: object have any string; false: object is null or ""
      * @author yunkuangao a317526763@gmail.com
-     * @apiNote 判断当前对象是否不为空并且不为空字符串
-     * @date 11:23
+     * @apiNote check param have any string
      **/
-    public static boolean isNotEmpty(Object str) {
-        return !isEmpty(str);
+    public static boolean isNotEmptyString(Object object) {
+        return !isEmptyString(object);
     }
 
     /**
-     * @param str
-     * @return boolean
+     * @param object default type Integer, check object is empty and value equals 0
+     * @return boolean true: object is null or 0; false: object not equals 0
      * @author yunkuangao a317526763@gmail.com
-     * @apiNote 判断当前对象是否为空或者空整形
-     * @date 2021/5/26 11:23
+     * @apiNote check param is null or 0
      **/
-    public static boolean isEmptyInteger(Object str) {
-        return str == null || ((Integer) str) == 0;
+    public static boolean isEmptyInteger(Object object) {
+        return object == null || ((Integer) object) == 0;
     }
 
     /**
-     * @param str
-     * @return boolean
+     * @param object default type Integer, check object not equals 0
+     * @return boolean true: object not equals 0; false: object is null or 0
      * @author yunkuangao a317526763@gmail.com
-     * @apiNote 判断当前对象是否不为空并且不为空整形
-     * @date 2021/5/26 11:23
+     * @apiNote check param have any value(not 0)
      **/
-    public static boolean isNotEmptyInteger(Object str) {
-        return !(isEmptyInteger(str));
+    public static boolean isNotEmptyInteger(Object object) {
+        return !(isEmptyInteger(object));
     }
 
-
     /**
-     * @param
-     * @return boolean
+     * @param map  check map
+     * @param keys key String array
+     * @return boolean true: map have all keys of args; false: map have not any keys of args
      * @author yunkuangao a317526763@gmail.com
-     * @description 判断map中是否有args内的键值
-     * @date 2021/4/10 16:21
+     * @apiNote if there is no value of args in the map,return no value's args
      **/
-    public static boolean hasAnyNull(Map<String, Object> map, String... args) {
-        for (String str : args) {
-            if (!map.containsKey(str) && isEmpty(map.get(str))) {
+    public static boolean hasAnyNull(Map<String, Object> map, String... keys) {
+        for (String str : keys) {
+            if (!map.containsKey(str) && isEmptyString(map.get(str))) {
                 return false;
             }
         }
@@ -67,16 +66,16 @@ public class StringHelper {
     }
 
     /**
-     * @param map
-     * @return boolean
+     * @param map  check map
+     * @param keys key String array
+     * @return java.lang.String returns keys that are not in args in the map
      * @author yunkuangao a317526763@gmail.com
-     * 返回map中args没有的键值
-     * @date 2021/4/10 16:23
+     * @apiNote if all args are contained in the map, an empty string will be returned; otherwise, no args will be returned
      **/
-    public static String getAnyNull(Map<String, Object> map, String... checkStr) {
+    public static String getAnyNull(Map<String, Object> map, String... keys) {
         StringBuilder sb = new StringBuilder();
-        for (String str : checkStr) {
-            if (!map.containsKey(str) && isEmpty(map.get(str))) {
+        for (String str : keys) {
+            if (!map.containsKey(str) && isEmptyString(map.get(str))) {
                 sb.append(str + ",");
             }
         }
@@ -84,44 +83,41 @@ public class StringHelper {
     }
 
     /**
-     * @param list
-     * @param checkStr
-     * @return java.lang.String
+     * @param list check list
+     * @param keys key String array
+     * @return java.lang.String return the key value that checkStr does not have in the list
      * @author yunkuangao a317526763@gmail.com
-     * 返回list中checkStr没有的键值
-     * @date 2021/4/23 10:40
+     * @apiNote use a wrapper of getAnyNull for List<Map>
      **/
-    public static String getAnyNull(List<Map> list, String... checkStr) {
+    public static String getAnyNull(List<Map> list, String... keys) {
         StringBuilder sb = new StringBuilder();
         list.forEach(lt -> {
-            sb.append(getAnyNull(lt, checkStr));
+            sb.append(getAnyNull(lt, keys));
         });
         return sb.toString();
     }
 
     /**
-     * @param str 字符串
-     * @param t   任意类型
-     * @return boolean
+     * @param string string
+     * @param t      any type
+     * @return boolean true: equal; false: not equal
      * @author yunkuangao a317526763@gmail.com
-     * 返回是否相等
-     * @date 2021年5月7日 15点24分
+     * @apiNote two-value comparison
      **/
-    public static <T> boolean equalsObj(String str, T t) {
-        return str != null && t != null && str.equals(t.toString());
+    public static <T> boolean equalsStringAndT(String string, T t) {
+        return string != null && t != null && string.equals(t.toString());
     }
 
     /**
-     * @param
-     * @return java.util.Map
+     * @param changeMap origin map
+     * @return java.util.Map return Map<K,V>
      * @author yunkuangao a317526763@gmail.com
-     * @apiNote 将map的value变为string
-     * @date 2021/5/19 15:09
+     * @apiNote change the type of MAP<K,V>
      **/
-    public static Map changeMapValueToString(Map<? extends Object, ? extends Object> changeMap) {
+    public static <K, V> Map changeMapToKT(Map<? extends Object, ? extends Object> changeMap, K t, V v) {
         return changeMap.entrySet().stream()
                 .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> String.valueOf(entry.getValue())));
+                        entryKey -> (K) entryKey.getKey(),
+                        entryValue -> (V) entryValue.getValue()));
     }
 }
